@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { TeamMember } from '@/types/roadmap';
+import { RoadmapItem, TeamMember } from '@/types/roadmap';
 import IdeaCard from '../roadmap/IdeaCard';
 import { useRoadmap } from '@/contexts/RoadmapContext';
 import { useDroppable } from '@dnd-kit/core';
@@ -12,7 +12,7 @@ interface RoadmapColumnProps {
   title: string;
   color: string;
   desc: string;
-  items: any[];
+  items: RoadmapItem[];
   team: TeamMember[];
   isDarkMode: boolean;
   selectedItemId?: string | null;

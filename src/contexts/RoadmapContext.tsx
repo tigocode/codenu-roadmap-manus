@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable react-hooks/set-state-in-effect */
+
 import React, { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
 import { RoadmapItem, RoadmapStatus, TeamMember } from '@/types/roadmap';
 import { db, auth } from '@/lib/firebase';
@@ -11,9 +13,8 @@ import {
   deleteDoc, 
   query, 
   orderBy,
-  collectionGroup
 } from 'firebase/firestore';
-import { signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { signInAnonymously } from 'firebase/auth';
 import type { Toast, ToastType } from '@/components/ui/Toast';
 
 interface RoadmapFilters {
@@ -99,6 +100,7 @@ export const RoadmapProvider = ({ children, initialItems }: RoadmapProviderProps
   });
 
   // 1. Hidratação inicial (Modo e LocalStorage)
+  // Os setters abaixo sincronizam o estado com o armazenamento externo na montagem.
   useEffect(() => {
     const savedMode = localStorage.getItem('codenu_sync_mode') as SyncMode;
     if (savedMode) setSyncMode(savedMode);

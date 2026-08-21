@@ -932,7 +932,7 @@ export default function CodenuRoadmap() {
                       <div className={`p-4 rounded-xl border ${isDarkMode ? 'bg-gray-900/50 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
                         <h4 className={`text-xs font-bold mb-3 uppercase flex items-center gap-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}><BarChart2 className="w-3.5 h-3.5 text-gray-500" /> Níveis de Impacto</h4>
                         <ul className="space-y-2">
-                          <li className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}><b className={`w-14 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Baixo:</b> "Nice to have". Melhoria de qualidade.</li>
+                          <li className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}><b className={`w-14 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Baixo:</b> &quot;Nice to have&quot;. Melhoria de qualidade.</li>
                           <li className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}><b className={`w-14 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Médio:</b> Funcionalidade Core necessária.</li>
                           <li className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}><b className={`w-14 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Alto:</b> Game Changer (Aumenta vendas).</li>
                         </ul>

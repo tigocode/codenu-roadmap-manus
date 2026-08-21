@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isMember(workspaceId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/workspaces/$(workspaceId)/members/$(request.auth.uid));
+    }
+
+    function memberRole(workspaceId) {
+      return get(/databases/$(database)/documents/workspaces/$(workspaceId)/members/$(request.auth.uid)).data.role;
+    }
+
+    function canWrite(workspaceId) {
+      return isMember(workspaceId) && memberRole(workspaceId) in ['owner', 'admin', 'editor'];
+    }
+
+    function canManage(workspaceId) {
+      return isMember(workspaceId) && memberRole(workspaceId) in ['owner', 'admin'];
+    }
+
+    match /users/{userId}/workspaces/{workspaceId} {
+      allow read, write: if signedIn() && request.auth.uid == userId;
+    }
+
+    match /workspaces/{workspaceId} {
+      allow read: if isMember(workspaceId);
+      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update, delete: if canManage(workspaceId);
+
+      match /members/{memberId} {
+        allow read: if isMember(workspaceId);
+        allow create: if canManage(workspaceId) || (signedIn() && memberId == request.auth.uid);
+        allow update, delete: if canManage(workspaceId) || (signedIn() && memberId == request.auth.uid);
+      }
+
+      match /boards/{boardId} {
+        allow read: if isMember(workspaceId);
+        allow create, update, delete: if canWrite(workspaceId);
+
+        match /lists/{listId} {
+          allow read: if isMember(workspaceId);
+          allow create, update, delete: if canWrite(workspaceId);
+        }
+
+        match /cards/{cardId} {
+          allow read: if isMember(workspaceId);
+          allow create, update, delete: if canWrite(workspaceId);
+        }
+
+        match /activity/{eventId} {
+          allow read: if isMember(workspaceId);
+          allow create: if canWrite(workspaceId);
+          allow update, delete: if false;
+        }
+      }
+    }
+  }
+}

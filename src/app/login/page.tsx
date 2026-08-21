@@ -1,24 +1,24 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, type ComponentProps } from 'react';
 import LoginForm from '@/components/auth/LoginForm';
 import { useRouter } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { signIn, error } = useAuth();
 
-  const handleLogin = async (data: any) => {
+  const handleLogin: ComponentProps<typeof LoginForm>['onSubmit'] = async (data) => {
     setIsLoading(true);
-    // Simulação de delay de autenticação profissional
-    console.log('Tentativa de login:', data);
-    
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsLoading(false);
-    // Redireciona para a home após o login mock
-    router.push('/');
+    try {
+      await signIn(data.email, data.password);
+      router.push('/');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,6 +41,11 @@ export default function LoginPage() {
         <Logo size="lg" className="scale-110 drop-shadow-xl" />
 
         <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+        {error && (
+          <p role="alert" className="-mt-6 w-full max-w-md rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300">
+            {error}
+          </p>
+        )}
         
         <div className="text-sm text-gray-500 dark:text-gray-400 font-medium tracking-tight">
           Ainda não tem conta? <a href="#" className="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 underline-offset-4 hover:underline transition-all">Comece agora gratuitamente</a>

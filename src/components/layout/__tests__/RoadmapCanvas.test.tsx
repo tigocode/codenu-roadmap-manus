@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import RoadmapCanvas from '../RoadmapCanvas';
 import { RoadmapItem } from '@/types/roadmap';
@@ -36,37 +36,44 @@ const mockItems: RoadmapItem[] = [
 ];
 
 describe('RoadmapCanvas', () => {
-  it('deve renderizar as colunas "Agora", "A Seguir" e "Mais Tarde"', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+  it('deve renderizar as colunas "Agora", "A Seguir" e "Mais Tarde"', async () => {
     render(
       <RoadmapProvider initialItems={[]}>
         <RoadmapCanvas isDarkMode={false} />
       </RoadmapProvider>
     );
 
-    expect(screen.getByText('Agora')).toBeInTheDocument();
-    expect(screen.getByText('A Seguir')).toBeInTheDocument();
-    expect(screen.getByText('Mais Tarde')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Agora')).toBeInTheDocument();
+      expect(screen.getByText('A Seguir')).toBeInTheDocument();
+      expect(screen.getByText('Mais Tarde')).toBeInTheDocument();
+    });
   });
 
-  it('deve exibir os cartões nas colunas corretas respeitando o status', () => {
+  it('deve exibir os cartões nas colunas corretas respeitando o status', async () => {
     render(
       <RoadmapProvider initialItems={mockItems}>
         <RoadmapCanvas isDarkMode={false} />
       </RoadmapProvider>
     );
 
-    expect(screen.getByText('Item Agora')).toBeInTheDocument();
-    expect(screen.getByText('Item A Seguir')).toBeInTheDocument();
-    expect(screen.getByText('Item Mais Tarde')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Item Agora')).toBeInTheDocument();
+      expect(screen.getByText('Item A Seguir')).toBeInTheDocument();
+      expect(screen.getByText('Item Mais Tarde')).toBeInTheDocument();
+    });
   });
 
-  it('deve suportar o modo DarkMode e atualizar background/cores', () => {
+  it('deve suportar o modo DarkMode e atualizar background/cores', async () => {
     const { container } = render(
       <RoadmapProvider initialItems={[]}>
         <RoadmapCanvas isDarkMode={true} />
       </RoadmapProvider>
     );
     
-    expect(container.firstChild).toBeInTheDocument();
+    await waitFor(() => expect(container.firstChild).toBeInTheDocument());
   });
 });

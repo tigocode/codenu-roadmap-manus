@@ -1,7 +1,9 @@
 'use client';
 
+/* eslint-disable react-hooks/set-state-in-effect */
+
 import React, { useState, useEffect } from 'react';
-import { RoadmapItem, TeamMember } from '@/types/roadmap';
+import { RoadmapStatus } from '@/types/roadmap';
 import SidebarInbox from '@/components/layout/SidebarInbox';
 import Navbar from '@/components/layout/Navbar';
 import RoadmapCanvas from '@/components/layout/RoadmapCanvas';
@@ -76,13 +78,21 @@ export default function Home() {
   );
 }
 
+interface HomeContentProps {
+  isDarkMode: boolean;
+  toggleTheme: () => void;
+  sensors: ReturnType<typeof useSensors>;
+  selectedItemId: string | null;
+  onSelectItem: (id: string | null) => void;
+}
+
 function HomeContent({ 
   isDarkMode, 
   toggleTheme, 
   sensors,
   selectedItemId,
   onSelectItem 
-}: any) {
+}: HomeContentProps) {
   const { items, updateItemStatus, updateItem, team, isHydrated, toasts, removeToast } = useRoadmap();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -100,7 +110,7 @@ function HomeContent({
     
     if (over && active.id !== over.id) {
       const itemId = active.id as string;
-      const newStatus = over.id as any; 
+      const newStatus = over.id as RoadmapStatus;
       
       updateItemStatus(itemId, newStatus);
     }

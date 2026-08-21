@@ -1,8 +1,10 @@
 'use client';
 
+/* eslint-disable react-hooks/set-state-in-effect */
+
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, User, Tag, Zap, CheckSquare, MessageSquare, Trash2, Plus, Target, ShieldCheck } from 'lucide-react';
-import { RoadmapItem } from '@/types/roadmap';
+import { EffortLevel, ImpactLevel, RoadmapItem, RoadmapStatus } from '@/types/roadmap';
 import Button from '@/components/ui/Button';
 import { useRoadmap } from '@/contexts/RoadmapContext';
 
@@ -27,6 +29,7 @@ export default function IdeaDrawer({
   const [localProject, setLocalProject] = useState('');
   const [newTaskText, setNewTaskText] = useState('');
 
+  // Hidrata os campos editáveis sempre que outro cartão é aberto.
   useEffect(() => {
     if (item) {
       setLocalTitle(item.title);
@@ -103,9 +106,10 @@ export default function IdeaDrawer({
           </div>
           <button 
             onClick={onClose}
+            aria-label="Fechar painel"
             className={`p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-400'}`}
           >
-            <X className="w-6 h-6" />
+            <X className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
 
@@ -181,7 +185,7 @@ export default function IdeaDrawer({
                 </label>
                 <select 
                   value={item.status}
-                  onChange={(e) => onUpdate(item.id, { status: e.target.value as any })}
+                  onChange={(e) => onUpdate(item.id, { status: e.target.value as RoadmapStatus })}
                   className={`w-full text-xs font-bold rounded-xl border p-2 transition-all outline-none ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-700'}`}
                 >
                   <option value="inbox">In-box</option>
@@ -216,7 +220,7 @@ export default function IdeaDrawer({
                 </label>
                 <select 
                   value={item.effort || ''}
-                  onChange={(e) => onUpdate(item.id, { effort: e.target.value as any })}
+                  onChange={(e) => onUpdate(item.id, { effort: e.target.value as EffortLevel })}
                   className={`w-full text-xs font-bold rounded-xl border p-2 transition-all outline-none ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-700'}`}
                 >
                   <option value="">Não medido</option>
@@ -232,7 +236,7 @@ export default function IdeaDrawer({
                 </label>
                 <select 
                   value={item.impact || ''}
-                  onChange={(e) => onUpdate(item.id, { impact: e.target.value as any })}
+                  onChange={(e) => onUpdate(item.id, { impact: e.target.value as ImpactLevel })}
                   className={`w-full text-xs font-bold rounded-xl border p-2 transition-all outline-none ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-700'}`}
                 >
                   <option value="">Não medido</option>
@@ -314,6 +318,8 @@ export default function IdeaDrawer({
                   </span>
                   <button 
                     onClick={() => removeTask(task.id)}
+                    title="Remover tarefa"
+                    aria-label={`Remover tarefa ${task.text}`}
                     className="p-1 opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-500 transition-all focus:opacity-100"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -327,7 +333,7 @@ export default function IdeaDrawer({
                   type="text"
                   value={newTaskText}
                   onChange={(e) => setNewTaskText(e.target.value)}
-                  placeholder="Premir Enter para adicionar tarefa..."
+                  placeholder="Adicionar nova tarefa..."
                   className={`flex-1 bg-transparent border-none outline-none focus:ring-0 p-0 text-sm font-medium ${isDarkMode ? 'text-white placeholder-gray-600' : 'text-gray-800 placeholder-gray-400'}`}
                 />
               </form>

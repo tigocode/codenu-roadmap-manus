@@ -63,7 +63,8 @@ describe('LoginForm', () => {
         expect.objectContaining({
           email: 'dev@codenu.com',
           password: 'senha123',
-        })
+        }),
+        expect.anything(),
       );
     });
   });

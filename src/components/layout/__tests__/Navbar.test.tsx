@@ -52,7 +52,7 @@ describe('Navbar', () => {
     );
 
     expect(screen.getByText('Codenu')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/nova ideia para a equipa/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/capturar ideia rápida/i)).toBeInTheDocument();
   });
 
   it('deve chamar onQuickCapture ao submeter uma nova ideia', () => {
@@ -67,7 +67,7 @@ describe('Navbar', () => {
       />
     );
 
-    const input = screen.getByPlaceholderText(/nova ideia para a equipa/i);
+    const input = screen.getByPlaceholderText(/capturar ideia rápida/i);
     const form = input.closest('form');
 
     fireEvent.change(input, { target: { value: 'Nova feature XYZ' } });
@@ -76,7 +76,7 @@ describe('Navbar', () => {
       fireEvent.submit(form);
     }
 
-    expect(mockOnQuickCapture).toHaveBeenCalledWith('Nova feature XYZ', undefined);
+    expect(mockOnQuickCapture).toHaveBeenCalledWith('Nova feature XYZ', mockTeam[0].id);
     expect(input).toHaveValue('');
   });
 
